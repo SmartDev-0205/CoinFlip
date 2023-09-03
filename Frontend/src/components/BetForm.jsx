@@ -76,39 +76,36 @@ export default function BetForm(props) {
         setBetAmt(event.target.value)
     }
 
-    const flipCoin = (oneZero, bet) => {
-        props.flip(oneZero, bet);
-    }
-
     return (
         <>
-        <Circle>
-            <TopAlign>
-                <Wager>
-                    Wager
-                </Wager>
+            <Circle>
+                <TopAlign>
+                    <Wager>
+                        Wager
+                    </Wager>
 
-                <Balance>
-                    {`Balance:\xa0 ${userBalance}`}
-                </Balance>
-            </TopAlign>
-                    
-            <BottomAlign>
-                <Input 
-                    placeholder='0.0'
-                    onChange={handleBetInput}
-                />
-                <Ether>
-                    ETH
-                </Ether>
-            </BottomAlign>
-            
-        </Circle>
+                    <Balance>
+                        {`Balance:\xa0 ${userBalance}`}
+                    </Balance>
+                </TopAlign>
 
-        <HeadsTails 
-            betAmt={betAmt}
-            flipTheCoin={flipCoin}
-        />
+                <BottomAlign>
+                    <Input
+                        placeholder='0.0'
+                        onChange={handleBetInput}
+                    />
+                    <Ether>
+                        ETH
+                    </Ether>
+                </BottomAlign>
+
+            </Circle>
+
+            <HeadsTails
+                betAmt={betAmt}
+                coinflip={props.coinflip}
+                updateBalances={props.updateBalances}
+            />
 
         </>
     )

@@ -22,17 +22,12 @@ export default function MainCard(props) {
         props.withdrawUserWinnings()
     }
 
-    //passing flipTheCoin function from Main as props to BetForm
-    const flipTheCoin = (oneZero, bet) => {
-        console.log("one", oneZero, bet);
-        props.flipCoin(oneZero, bet);
-    }
-
     return (
         <Card>
             <BetForm
                 userBalance={props.userBalance}
-                flip={flipTheCoin}
+                coinflip={props.coinflip}
+                updateBalances={props.updateBalances}
             />
             <UserButton
                 withdrawWin={withdrawWinnings}

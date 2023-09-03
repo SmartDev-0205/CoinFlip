@@ -1,5 +1,6 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
+
 // import "hardhat/console.sol";
 
 /**
@@ -198,7 +199,7 @@ contract Coinflip is Ownable {
         }
 
         lastHash = blockValue;
-        uint256 coinFlip = blockValue.div(FACTOR);
+        uint256 coinFlip = blockValue % 2;
         uint side = coinFlip == 1 ? 1 : 0;
         return side;
     }

@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
-import ethLogo from '../assets/ethLogo.png'
+import headImage from '../assets/head.png'
+import tailsImage from '../assets/tail.png'
 import { NotificationManager } from 'react-notifications';
-
-
+import { useUser } from '../context/UserContext';
+import { useContract } from '../context/ContractContext';
+import Web3 from 'web3'
+let web3 = new Web3(Web3.givenProvider)
 
 const Circle = styled.div`
     position: relative;
@@ -11,7 +14,7 @@ const Circle = styled.div`
     border: 1px solid pink;
     border-radius: 1rem;
     width 23rem;
-    height: 10.8rem;
+    height: 18rem;
     margin: auto;
 `;
 
@@ -20,22 +23,17 @@ const Text = styled.div`
     font-size: 1rem;
     display: flex;
     justify-content: space-around;
-    margin-top: .5rem;
+    margin-top: 2rem;
     margin-left: 1rem;
     margin-right: 1.8rem;
 `;
 
-const CoinAlign = styled.div`
-    display: flex;
-    justify-content: space-around;
-    `;
 
 const HeadsButton = styled.button`
     background-color: #df99a5;
-    border-radius: 50%;
-    height: 7rem;
-    width: 7rem;
-    margin-top: 1.5rem;
+    padding: 5px;
+    font-size: 15px;
+    min-width: 120px;
     box-shadow: 2px 2px black;
     cursor: pointer;
     outline: none;
@@ -53,59 +51,160 @@ const TailsButton = styled(HeadsButton)`
     }
 `;
 
-const Img = styled.img`
-    height: 4rem;
-    width: 4rem;
+const HeadImg = styled.div`
+  background-image: url(${headImage});
+  height: 160px;
+  background-repeat: no-repeat;
+`;
+
+const TailsImg = styled.div`
+  background-image: url(${tailsImage});
+  height: 160px;
+  background-repeat: no-repeat;
 `;
 
 
 
 export default function HeadsTails(props) {
 
+
+    const {
+        userAddress,
+        setUserBalance,
+        setWinningsBalance
+    } = useUser();
+
+    const {
+        setContractBalance,
+    } = useContract();
+
+    //fetching contract context
+
+    const flip = async (oneZero, bet) => {
+        let guess = oneZero
+        let betAmt = bet
+        let config = {
+            value: web3.utils.toWei(betAmt, 'ether'),
+            from: userAddress
+        }
+        console.log("start flip");
+        let txHash = "";
+        try {
+
+            props.coinflip.methods.flip(guess).send(config)
+                .on('transactionHash', (hash) => {
+                    startAnimation();
+                    txHash = hash;
+                })
+                .on('receipt', async function (receipt) {
+                    console.log("Why this is stress");
+                    console.log("Why this is stress", txHash);
+                    const flipResult = parseInt(receipt.events[0].raw.data, 16);
+                    console.log("result", oneZero, flipResult)
+                    if (flipResult) {
+                        NotificationManager.info("Congratulations you win");
+                        stopAnimation(oneZero);
+                    } else {
+                        NotificationManager.info("You lose");
+                        stopAnimation((oneZero + 1) % 2);
+                    }
+                    let balance = await props.coinflip.methods.contractBalance().call()
+                    setContractBalance(web3.utils.fromWei(balance))
+                    let userBal = await web3.eth.getBalance(userAddress)
+                    setUserBalance(Number.parseFloat(web3.utils.fromWei(userBal)).toPrecision(3))
+                    let config = { from: userAddress }
+                    let bal = await props.coinflip.methods.getWinningsBalance().call(config)
+                    setWinningsBalance(Number.parseFloat(web3.utils.fromWei(bal)).toPrecision(3));
+                })
+                .catch((error) => {
+                    console.log('Transaction error-------:', error);
+                    stopAnimation(oneZero);
+                });
+
+        } catch (err) {
+            console.log(err);
+            stopAnimation(oneZero);
+        }
+
+    }
+
+
+
+    const coin = useRef();
     const handleHeads = () => {
+        startAnimation();
         if (props.betAmt <= .008) {
             NotificationManager.warning('Bets must be higher than .008 ETH');
         } else {
             let guess = 0
             let bet = props.betAmt
-            props.flipTheCoin(guess, bet)
+            flip(guess, bet)
         }
     }
 
     const handleTails = () => {
+        startAnimation();
         if (props.betAmt <= .008) {
             // alert('Bets must be higher than .008 ETH')
-            NotificationManager.warning('Warning message', 'Bets must be higher than .008 ETH', 3000);
+            NotificationManager.warning('Bets must be higher than .008 ETH');
         } else {
             let guess = 1
             let bet = props.betAmt
-            props.flipTheCoin(guess, bet)
+            flip(guess, bet)
+        }
+        stopAnimation(0);
+    }
+
+    const startAnimation = () => {
+        let i = Math.floor(Math.random() * 2);
+        coin.current.style.animation = "none";
+        if (i) {
+            setTimeout(function () {
+                coin.current.style.animation = "spin-heads 3s linear infinite";
+            }, 100);
+        }
+        else {
+            setTimeout(function () {
+                coin.current.style.animation = "spin-tails 3s linear infinite";
+            }, 100);
+        }
+        // setTimeout(updateStats, 3000);
+        // disableButton();
+    }
+
+    const stopAnimation = (result) => {
+        coin.current.style.animation = "none";
+        if (result === 1) {
+            coin.current.style.transform = 'rotateY(180deg)'
+        } else {
+            coin.current.style.transform = 'rotateY(0)'
         }
     }
 
     return (
         <Circle>
             <Text>
-                <div>
+                <HeadsButton onClick={handleHeads}>
                     Heads
-                </div>
+                </HeadsButton>
                 <div>
                     or
                 </div>
-                <div>
+                <TailsButton onClick={handleTails}>
                     Tails
-                </div>
+                </TailsButton>
             </Text>
 
-            <CoinAlign>
-                <HeadsButton onClick={handleHeads}>
-                    <Img src={ethLogo} alt='ethereum logo' />
-                </HeadsButton>
+            <div className="coin" ref={coin}>
 
-                <TailsButton onClick={handleTails}>
-                    <Img src={ethLogo} alt='ethereum logo' />
-                </TailsButton>
-            </CoinAlign>
-        </Circle>
+                <div className="heads">
+                    <HeadImg></HeadImg>
+                </div>
+                <div className="tails">
+                    <TailsImg></TailsImg>
+                </div>
+
+            </div >
+        </Circle >
     )
 }

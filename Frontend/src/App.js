@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import styled from 'styled-components'
-import backgroundImage from './assets/backgroundImage.jpg'
-import Main from './components/Main'
+import React, { useState } from "react";
+import styled from "styled-components";
+import backgroundImage from "./assets/backgroundImage.jpg";
+import Main from "./components/Main";
 
-import { UserProvider } from './context/UserContext'
-import { ContractProvider } from './context/ContractContext'
+import { UserProvider } from "./context/UserContext";
+import { ContractProvider } from "./context/ContractContext";
 
 const Img = styled.div`
   border: 1px solid #000;
@@ -12,40 +12,38 @@ const Img = styled.div`
   height: 100vh;
 `;
 
-
 function App() {
-
   //user state
-  const [userAddress, setUserAddress] = useState('');
-  const [userBalance, setUserBalance] = useState('');
-  const [winningsBalance, setWinningsBalance] = useState('');
+  const [userAddress, setUserAddress] = useState("");
+  const [userBalance, setUserBalance] = useState("");
+  const [winningsBalance, setWinningsBalance] = useState("");
 
   const userState = {
-    userAddress, 
-    setUserAddress, 
-    userBalance, 
-    setUserBalance, 
-    winningsBalance, 
+    userAddress,
+    setUserAddress,
+    userBalance,
+    setUserBalance,
+    winningsBalance,
     setWinningsBalance,
-  }
+  };
 
   //contract state
-  const [contractBalance, setContractBalance] = useState('');
-  const [owner, setOwner] = useState('');
-  const [network, setNetwork] = useState('');
+  const [contractBalance, setContractBalance] = useState("");
+  const [owner, setOwner] = useState("");
+  const [network, setNetwork] = useState("");
   const [isOwner, setIsOwner] = useState(false);
-  const [sentQueryId, setSentQueryId] = useState('');
-  const [awaitingCallbackResponse, setAwaitingCallbackResponse] = useState('');
-  const [awaitingWithdrawal, setAwaitingWithdrawal] = useState('');
+  const [sentQueryId, setSentQueryId] = useState("");
+  const [awaitingCallbackResponse, setAwaitingCallbackResponse] = useState("");
+  const [awaitingWithdrawal, setAwaitingWithdrawal] = useState("");
 
   const contractState = {
     contractBalance,
     setContractBalance,
     owner,
-    setOwner, 
+    setOwner,
     isOwner,
     setIsOwner,
-    network, 
+    network,
     setNetwork,
     sentQueryId,
     setSentQueryId,
@@ -53,9 +51,7 @@ function App() {
     setAwaitingCallbackResponse,
     awaitingWithdrawal,
     setAwaitingWithdrawal,
-  }
-
-  
+  };
 
   return (
     <Img>

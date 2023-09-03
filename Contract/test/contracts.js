@@ -49,24 +49,35 @@ describe("deploy contracts", function () {
 describe("contracts test", function () {
   it("contract test", async () => {
     let tx = await coinflipContract.fundContract({
-      value: toBigNum("3", 18),
+      value: toBigNum("4", 18),
     });
     let txFlip = await coinflipContract
       .connect(addr1)
       .flip(1, { value: toBigNum("1", 18) });
     await txFlip.wait;
-    const receipt = await txFlip.wait();
+    let receipt = await txFlip.wait();
     // console.log(receipt.events);
     for (const event of receipt.events) {
       console.log(`Event ${event.event} with args ${event.args}`);
     }
-    // tx = await coinflipContract
-    //   .connect(addr1)
-    //   .flip(1, { value: toBigNum("1", 18) });
-    // await tx.wait;
-    // tx = await coinflipContract.connect(addr1).withdrawUserWinnings();
-    // await tx.wait;
-    // var cAmount = await provider.getBalance(coinflipContract.address);
-    // console.log("After amount", cAmount);
+    txFlip = await coinflipContract
+      .connect(addr1)
+      .flip(1, { value: toBigNum("1", 18) });
+    await txFlip.wait;
+    receipt = await txFlip.wait();
+    // console.log(receipt.events);
+    for (const event of receipt.events) {
+      console.log(`Event ${event.event} with args ${event.args}`);
+    }
+
+    txFlip = await coinflipContract
+      .connect(addr1)
+      .flip(1, { value: toBigNum("1", 18) });
+    await txFlip.wait;
+    receipt = await txFlip.wait();
+    // console.log(receipt.events);
+    for (const event of receipt.events) {
+      console.log(`Event ${event.event} with args ${event.args}`);
+    }
   });
 });

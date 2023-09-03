@@ -34,10 +34,11 @@ const AlignHalf = styled.div`
  */
 let web3 = new Web3(Web3.givenProvider)
 // let contractAddress = web3.utils.toChecksumAddress('0xeed205d12965730582fc01a2c258b8624943f328');
-let contractAddress = web3.utils.toChecksumAddress('0x67a488F2297D411f48311bd4ac0811a51e7DFe0E');
+let contractAddress = web3.utils.toChecksumAddress('0x6FdFC8c2981E0889E01792989D20A16dD8DF7cAE');
 
 
 export default function Main() {
+
 
     //fetching user context
     const {
@@ -58,9 +59,6 @@ export default function Main() {
         setIsOwner,
         network,
         setNetwork,
-        sentQueryId,
-        setSentQueryId,
-        awaitingCallbackResponse,
         setAwaitingCallbackResponse,
         awaitingWithdrawal,
         setAwaitingWithdrawal,
@@ -235,28 +233,35 @@ export default function Main() {
      * @param {*} bet The wagered amount.
      */
 
-    const flip = async (oneZero, bet) => {
-        NotificationManager.info("Starting")
-        setAwaitingCallbackResponse(false)
-        console.log("test");
-        let guess = oneZero
-        let betAmt = bet
-        let config = {
-            value: web3.utils.toWei(betAmt, 'ether'),
-            from: userAddress
-        }
-        coinflip.methods.flip(guess).send(config)
-            .on('receipt', function (receipt) {
-                const flipResult = parseInt(receipt.events[0].raw.data, 16);
-                if (flipResult) {
-                    NotificationManager.info("Congratulations you win");
-                } else {
-                    NotificationManager.info("You lose");
-                }
-                loadWinningsBalance(userAddress)
-                loadContractBalance()
-            })
-    }
+    // const flip = async (oneZero, bet) => {
+    //     setAwaitingCallbackResponse(false)
+    //     console.log("test");
+    //     let guess = oneZero
+    //     let betAmt = bet
+    //     let config = {
+    //         value: web3.utils.toWei(betAmt, 'ether'),
+    //         from: userAddress
+    //     }
+    //     console.log("start flip");
+    //     coinflip.methods.flip(guess).send(config)
+    //         .on('transactionHash', (hash) => {
+    //             ref.current.startAnimation();
+    //         })
+    //         .on('receipt', function (receipt) {
+    //             const flipResult = parseInt(receipt.events[0].raw.data, 16);
+    //             if (flipResult) {
+    //                 NotificationManager.info("Congratulations you win");
+    //                 ref.current.stopAnimation(oneZero);
+    //             } else {
+    //                 NotificationManager.info("You lose");
+    //             }
+    //             loadWinningsBalance(userAddress);
+    //             loadContractBalance();
+    //         })
+    //         .on('error', (error) => {
+    //             console.error('Transaction error:', error);
+    //         });
+    // }
 
     /**
      * @notice This function closes the modal when the user hits 'okay,' and resets 
@@ -273,37 +278,6 @@ export default function Main() {
      *         the modal outcome message. Thereafter, it reloads the user's winnings
      *         balance and contract balance. 
      */
-
-    // useEffect(() => {
-    //     if (awaitingCallbackResponse) {
-    //         coinflip.events.callbackReceived({
-    //             fromBlock: 'latest'
-    //         }, function (error, event) {
-    //             if (event.returnValues[0] === sentQueryId) {
-    //                 if (event.returnValues[1] === 'Winner') {
-    //                     setOutcomeMessage('You Won ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!')
-    //                     loadWinningsBalance(userAddress)
-    //                     loadContractBalance()
-    //                 } else {
-    //                     setOutcomeMessage('You lost ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH...')
-    //                     loadWinningsBalance(userAddress)
-    //                     loadContractBalance()
-    //                 }
-    //             } setAwaitingCallbackResponse(false)
-    //         })
-    //         setSentQueryId('')
-    //     }
-    // }, [
-    //     userAddress,
-    //     awaitingCallbackResponse,
-    //     sentQueryId,
-    //     contractBalance,
-    //     loadContractBalance,
-    //     loadWinningsBalance,
-    //     setAwaitingCallbackResponse,
-    //     setSentQueryId
-    // ]
-    // )
 
 
 
@@ -373,6 +347,11 @@ export default function Main() {
             })
     }
 
+    const updateBalances = () => {
+        loadContractBalance()
+        loadUserBalance(userAddress)
+
+    }
 
     /**
      * @notice This hook communicates to the user when their withdrawal of funds from
@@ -424,7 +403,8 @@ export default function Main() {
                     <ContractBalance />
                     <MainCard
                         withdrawUserWinnings={withdrawUserWinnings}
-                        flipCoin={flip}
+                        coinflip={coinflip}
+                        updateBalances={updateBalances}
                     />
                 </AlignHalf>
                 <AlignQuarter>
