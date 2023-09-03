@@ -12,6 +12,8 @@ import styled from 'styled-components'
 import { useUser } from '../context/UserContext'
 import { useContract } from '../context/ContractContext'
 
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+
 const AlignContent = styled.div`
     position: relative;
     top: 1rem;
@@ -31,7 +33,9 @@ const AlignHalf = styled.div`
  * @notice The necessary data required for the dApp.
  */
 let web3 = new Web3(Web3.givenProvider)
-let contractAddress = web3.utils.toChecksumAddress('0xeed205d12965730582fc01a2c258b8624943f328');
+// let contractAddress = web3.utils.toChecksumAddress('0xeed205d12965730582fc01a2c258b8624943f328');
+let contractAddress = web3.utils.toChecksumAddress('0x67a488F2297D411f48311bd4ac0811a51e7DFe0E');
+
 
 export default function Main() {
 
@@ -232,6 +236,7 @@ export default function Main() {
      */
 
     const flip = async (oneZero, bet) => {
+        NotificationManager.info("Starting")
         setAwaitingCallbackResponse(false)
         console.log("test");
         let guess = oneZero
@@ -242,8 +247,14 @@ export default function Main() {
         }
         coinflip.methods.flip(guess).send(config)
             .on('receipt', function (receipt) {
-                setSentQueryId(receipt.events.sentQueryId.returnValues[1])
-                setAwaitingCallbackResponse(true)
+                const flipResult = parseInt(receipt.events[0].raw.data, 16);
+                if (flipResult) {
+                    NotificationManager.info("Congratulations you win");
+                } else {
+                    NotificationManager.info("You lose");
+                }
+                loadWinningsBalance(userAddress)
+                loadContractBalance()
             })
     }
 
@@ -263,36 +274,36 @@ export default function Main() {
      *         balance and contract balance. 
      */
 
-    useEffect(() => {
-        if (awaitingCallbackResponse) {
-            coinflip.events.callbackReceived({
-                fromBlock: 'latest'
-            }, function (error, event) {
-                if (event.returnValues[0] === sentQueryId) {
-                    if (event.returnValues[1] === 'Winner') {
-                        setOutcomeMessage('You Won ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!')
-                        loadWinningsBalance(userAddress)
-                        loadContractBalance()
-                    } else {
-                        setOutcomeMessage('You lost ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH...')
-                        loadWinningsBalance(userAddress)
-                        loadContractBalance()
-                    }
-                } setAwaitingCallbackResponse(false)
-            })
-            setSentQueryId('')
-        }
-    }, [
-        userAddress,
-        awaitingCallbackResponse,
-        sentQueryId,
-        contractBalance,
-        loadContractBalance,
-        loadWinningsBalance,
-        setAwaitingCallbackResponse,
-        setSentQueryId
-    ]
-    )
+    // useEffect(() => {
+    //     if (awaitingCallbackResponse) {
+    //         coinflip.events.callbackReceived({
+    //             fromBlock: 'latest'
+    //         }, function (error, event) {
+    //             if (event.returnValues[0] === sentQueryId) {
+    //                 if (event.returnValues[1] === 'Winner') {
+    //                     setOutcomeMessage('You Won ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!')
+    //                     loadWinningsBalance(userAddress)
+    //                     loadContractBalance()
+    //                 } else {
+    //                     setOutcomeMessage('You lost ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH...')
+    //                     loadWinningsBalance(userAddress)
+    //                     loadContractBalance()
+    //                 }
+    //             } setAwaitingCallbackResponse(false)
+    //         })
+    //         setSentQueryId('')
+    //     }
+    // }, [
+    //     userAddress,
+    //     awaitingCallbackResponse,
+    //     sentQueryId,
+    //     contractBalance,
+    //     loadContractBalance,
+    //     loadWinningsBalance,
+    //     setAwaitingCallbackResponse,
+    //     setSentQueryId
+    // ]
+    // )
 
 
 
@@ -424,6 +435,7 @@ export default function Main() {
                     />
                 </AlignQuarter>
             </AlignContent>
+            <NotificationContainer />
         </div>
     )
 }

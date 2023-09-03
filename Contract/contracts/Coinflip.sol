@@ -1,4 +1,6 @@
+//SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
+// import "hardhat/console.sol";
 
 /**
  * @dev Wrappers over Solidity's arithmetic operations with added overflow
@@ -176,6 +178,7 @@ contract Coinflip is Ownable {
 
     event logNewProvableQuery(string description);
     event userWithdrawal(address indexed caller, uint256 amount);
+    event filpFinshed(uint result);
 
     uint256 lastHash;
     uint256 FACTOR =
@@ -225,6 +228,7 @@ contract Coinflip is Ownable {
 
         if (flipResult == postBet.headsTails) {
             //winner
+            emit filpFinshed(1);
             uint winAmount = SafeMath.sub(SafeMath.mul(postBet.betValue, 2), 0);
             contractBalance = SafeMath.sub(contractBalance, postBet.betValue);
             playerWinnings[_player] = SafeMath.add(
@@ -233,6 +237,7 @@ contract Coinflip is Ownable {
             );
         } else {
             //loser
+            emit filpFinshed(0);
             contractBalance = SafeMath.add(
                 contractBalance,
                 // SafeMath.sub(postBet.betValue, postBet.setRandomPrice)

@@ -51,14 +51,22 @@ describe("contracts test", function () {
     let tx = await coinflipContract.fundContract({
       value: toBigNum("3", 18),
     });
-    await tx.wait();
-    tx = await coinflipContract.connect(addr1).flip(1, { value: toBigNum("1", 18) });
-    await tx.wait;
-	tx = await coinflipContract.connect(addr1).flip(1, { value: toBigNum("1", 18) });
-    await tx.wait;
-	tx = await coinflipContract.connect(addr1).withdrawUserWinnings();
-	await tx.wait;
-    var cAmount = await provider.getBalance(coinflipContract.address);
-    console.log("After amount", cAmount);
+    let txFlip = await coinflipContract
+      .connect(addr1)
+      .flip(1, { value: toBigNum("1", 18) });
+    await txFlip.wait;
+    const receipt = await txFlip.wait();
+    // console.log(receipt.events);
+    for (const event of receipt.events) {
+      console.log(`Event ${event.event} with args ${event.args}`);
+    }
+    // tx = await coinflipContract
+    //   .connect(addr1)
+    //   .flip(1, { value: toBigNum("1", 18) });
+    // await tx.wait;
+    // tx = await coinflipContract.connect(addr1).withdrawUserWinnings();
+    // await tx.wait;
+    // var cAmount = await provider.getBalance(coinflipContract.address);
+    // console.log("After amount", cAmount);
   });
 });

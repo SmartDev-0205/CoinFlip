@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import ethLogo from '../assets/ethLogo.png'
+import { NotificationManager } from 'react-notifications';
+
 
 
 const Circle = styled.div`
@@ -61,22 +63,23 @@ const Img = styled.img`
 export default function HeadsTails(props) {
 
     const handleHeads = () => {
-        if(props.betAmt <= .008){
-            alert('Bets must be higher than .008 ETH')
+        if (props.betAmt <= .008) {
+            NotificationManager.warning('Bets must be higher than .008 ETH');
         } else {
-        let guess = 0
-        let bet = props.betAmt
-        props.flipTheCoin(guess, bet)
+            let guess = 0
+            let bet = props.betAmt
+            props.flipTheCoin(guess, bet)
         }
     }
-    
+
     const handleTails = () => {
-        if(props.betAmt <= .008){
-            alert('Bets must be higher than .008 ETH')
+        if (props.betAmt <= .008) {
+            // alert('Bets must be higher than .008 ETH')
+            NotificationManager.warning('Warning message', 'Bets must be higher than .008 ETH', 3000);
         } else {
-        let guess = 1
-        let bet = props.betAmt
-        props.flipTheCoin(guess, bet)
+            let guess = 1
+            let bet = props.betAmt
+            props.flipTheCoin(guess, bet)
         }
     }
 
@@ -96,11 +99,11 @@ export default function HeadsTails(props) {
 
             <CoinAlign>
                 <HeadsButton onClick={handleHeads}>
-                    <Img src={ethLogo} alt='ethereum logo'/>
+                    <Img src={ethLogo} alt='ethereum logo' />
                 </HeadsButton>
 
                 <TailsButton onClick={handleTails}>
-                    <Img src={ethLogo} alt='ethereum logo'/>
+                    <Img src={ethLogo} alt='ethereum logo' />
                 </TailsButton>
             </CoinAlign>
         </Circle>
