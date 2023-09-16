@@ -5,8 +5,8 @@ import UserButton from './UserButton'
 
 const Card = styled.div`
     position: relative;
-    height: 29.4rem;
-    width: 25rem;
+    // height: 29.4rem;
+    width: 380px;
     background: #5D432C;
     border: 3px solid #35281E;
     border-radius: 1.5rem;

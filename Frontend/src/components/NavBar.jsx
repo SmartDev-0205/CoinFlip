@@ -3,7 +3,8 @@ import styled from 'styled-components'
 import ethLogo from '../assets/ethLogo.png'
 
 import { useUser } from '../context/UserContext'
-import { useContract }  from '../context/ContractContext'
+import { useContract } from '../context/ContractContext'
+import Web3 from 'web3'
 
 const Nav = styled.nav`
     border-bottom: 1px solid black;
@@ -85,7 +86,8 @@ export default function Navbar() {
     //user context
     const {
         userAddress,
-        userBalance
+        userBalance,
+        setUserAddress
     } = useUser()
 
     //contract context
@@ -94,24 +96,39 @@ export default function Navbar() {
     } = useContract()
 
     const address = userAddress ? userAddress.slice(0, 5) + '...' + userAddress.slice(37, 42) : null
-    
+    const connectWallet = async () => {
+        await window.ethereum.enable();
+        let web3 = new Web3(Web3.givenProvider)
+        console.log("user addresses start");
+        let accounts = await web3.eth.getAccounts()
+        console.log("accounts", accounts);
+        let account = accounts[0]
+        setUserAddress(account);
+        return account
+    }
+
     return (
         <Nav>
             <NavCenter>
                 <TitleLogo>
-                        <Img src={ethLogo} alt='ethereum logo' />
-                        <H1> Coinflip dApp </H1>
+                    <Img src={ethLogo} alt='ethereum logo' />
+                    <H1 className='nav-title'> Coinflip dApp </H1>
                 </TitleLogo>
-                <Div>
-                    <NetworkDiv>
-                        { network }
+                <Div >
+                    <NetworkDiv className='nav-title'>
+                        {network}
                     </NetworkDiv>
-                    <Circle >
-                         { userBalance } ETH
+                    {userAddress ? (
+                        <Circle >
+                            {userBalance} ETH
                             <CircleTwo>
                                 {address}
                             </CircleTwo>
-                    </Circle>
+                        </Circle>
+                    ) : (
+                        <div><button className='connect-wallet' onClick={connectWallet}>connect wallet</button></div>
+                    )}
+
                 </Div>
             </NavCenter>
         </Nav>

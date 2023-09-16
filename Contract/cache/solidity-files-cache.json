@@ -87,6 +87,53 @@
       "artifacts": [
         "console"
       ]
+    },
+    "D:\\Working\\joye-test\\coinflip\\Contract\\contracts\\joey-presale.sol": {
+      "lastModificationDate": 1694267318484,
+      "contentHash": "12735f1aae2e22bae159ad2dee7bef57",
+      "sourceName": "contracts/joey-presale.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8"
+      ],
+      "artifacts": [
+        "Aggregator",
+        "BTC30_Presale",
+        "Claimable",
+        "Context",
+        "IERC20",
+        "Ownable"
+      ]
     }
   }
 }

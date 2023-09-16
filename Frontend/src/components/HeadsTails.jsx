@@ -31,10 +31,13 @@ const Text = styled.div`
 
 const HeadsButton = styled.button`
     background-color: #df99a5;
-    padding: 5px;
+    padding: 7px 5px;
     font-size: 15px;
     min-width: 120px;
-    box-shadow: 2px 2px black;
+    border-radius: 10px;
+    font-weight: 700;
+    color: white;
+    border: none;
     cursor: pointer;
     outline: none;
 
@@ -128,14 +131,12 @@ export default function HeadsTails(props) {
 
     }
 
-
-
     const coin = useRef();
     const handleHeads = () => {
-        startAnimation();
         if (props.betAmt <= .008) {
             NotificationManager.warning('Bets must be higher than .008 ETH');
         } else {
+            startAnimation();
             let guess = 0
             let bet = props.betAmt
             flip(guess, bet)
@@ -143,11 +144,11 @@ export default function HeadsTails(props) {
     }
 
     const handleTails = () => {
-        startAnimation();
         if (props.betAmt <= .008) {
             // alert('Bets must be higher than .008 ETH')
             NotificationManager.warning('Bets must be higher than .008 ETH');
         } else {
+            startAnimation();
             let guess = 1
             let bet = props.betAmt
             flip(guess, bet)

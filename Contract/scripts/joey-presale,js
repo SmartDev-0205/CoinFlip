@@ -1,0 +1,29 @@
+const fs = require("fs");
+const colors = require("colors");
+const { ethers } = require("hardhat");
+async function main() {
+  // get network
+  let [owner] = await ethers.getSigners();
+  console.log(owner.address);
+  let network = await owner.provider._networkPromise;
+
+  let price = 30000 * 1000000;
+  const PresaleContract = await ethers.getContractFactory("BTC30_Presale");
+  presaleContract = await PresaleContract.deploy(
+    "0xB3dA8743416C2F5c2d784DBA27c3d72f88DcC40f",
+    price
+  );
+
+  // deployment result
+
+  console.log(presaleContract.address);
+}
+
+main()
+  .then(() => {
+    console.log("complete".green);
+  })
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

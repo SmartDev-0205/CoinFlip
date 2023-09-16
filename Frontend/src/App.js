@@ -9,6 +9,7 @@ import { ContractProvider } from "./context/ContractContext";
 const Img = styled.div`
   border: 1px solid #000;
   background-image: url(${backgroundImage});
+  min-height: 800px;
   height: 100vh;
 `;
 

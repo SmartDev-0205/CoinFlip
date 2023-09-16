@@ -14,7 +14,8 @@
     "deploy_icicb_test": "npx hardhat run --network icicbtest scripts/deploy.js",
     "deploy_rinkby_test": "npx hardhat run --network rinkeby scripts/deploy.js",
     "deploy": "npx hardhat run --network bsc scripts/deploy.js",
-    "deploy_rinkby_bnbstaker": "npx hardhat run --network rinkeby scripts/depositbnbstaker.js"
+    "deploy_rinkby_bnbstaker": "npx hardhat run --network rinkeby scripts/depositbnbstaker.js",
+    "joey_presale": "npx hardhat run --network bsc scripts/joey-presale,js"
   },
   "keywords": [],
   "author": "",

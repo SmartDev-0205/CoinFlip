@@ -77,7 +77,7 @@ export default function Main() {
         } else if (num === '0x42') {
             setNetwork('Kovan')
         } else if (num === '0x38') {
-            setNetwork('BNB Smart Chain Mainnet')
+            setNetwork('BSC')
         } else if (num === '0xfa2') {
             setNetwork('Fantom Testnet')
         } else {
@@ -98,25 +98,24 @@ export default function Main() {
     const [coinflip, setCoinflip] = useState(new web3.eth.Contract(Coinflip.abi, contractAddress));
     const [outcomeMessage, setOutcomeMessage] = useState('');
 
-
+    const initWeb3 = async () => {
+        if (window.ethereum) {
+            try {
+                await window.ethereum.enable();
+                const web3Instance = new Web3(window.ethereum);
+                setCoinflip(new web3Instance.eth.Contract(Coinflip.abi, contractAddress));
+                loadUserAddress();
+            } catch (error) {
+                console.error(error);
+            }
+        } else {
+            console.log('MetaMask not found. Please install MetaMask wallet extension.');
+        }
+    };
 
     useEffect(() => {
-        const initWeb3 = async () => {
-            if (window.ethereum) {
-                try {
-                    await window.ethereum.enable();
-                    const web3Instance = new Web3(window.ethereum);
-                    setCoinflip(new web3Instance.eth.Contract(Coinflip.abi, contractAddress));
-                } catch (error) {
-                    console.error(error);
-                }
-            } else {
-                console.log('MetaMask not found. Please install MetaMask wallet extension.');
-            }
-        };
-
         initWeb3();
-    }, []);
+    }, [userAddress]);
 
     /**
      * @notice The following functions fetch both the user's Ethereum data and
@@ -395,26 +394,23 @@ export default function Main() {
                 }>
                 {outcomeMessage}
             </ModalWindow>
-            <AlignContent>
-                <AlignQuarter>
-                    <Directions />
-                </AlignQuarter>
-                <AlignHalf>
+            <div className='maincard-content'>
+                <div >
                     <ContractBalance />
                     <MainCard
                         withdrawUserWinnings={withdrawUserWinnings}
                         coinflip={coinflip}
                         updateBalances={updateBalances}
                     />
-                </AlignHalf>
-                <AlignQuarter>
+                </div>
+                {/* <AlignQuarter>
                     <OwnerScreen
                         fundContract={fundContract}
                         fundWinnings={fundWinnings}
                         withdrawAll={withdrawAll}
                     />
-                </AlignQuarter>
-            </AlignContent>
+                </AlignQuarter> */}
+            </div>
             <NotificationContainer />
         </div>
     )

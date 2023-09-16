@@ -5,13 +5,14 @@ import { useUser } from '../context/UserContext'
 
 const WithdrawButton = styled.button`
     position: relative;
-    top: 5rem;
+    display: block;
+    margin:auto;
+    top: 6rem;
     border: 1px solid #666666;
     background-color: #333333;
     border-radius: 1rem;
     width 23rem;
     height: 5.4rem;
-    margin-left: 1rem;
     cursor: pointer;
     outline: none;
 
@@ -73,7 +74,7 @@ export default function UserButton(props) {
             <AlignText>
                 <Text>
                     Your Winnings: 
-                </Text>
+                </Text> 
                 <Text1>
                     { winningsBalance }
                 </Text1>
