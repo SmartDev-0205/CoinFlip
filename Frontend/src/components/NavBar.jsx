@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import ethLogo from '../assets/ethLogo.png'
+import ethLogo from '../assets/logo.png'
 
 import { useUser } from '../context/UserContext'
 import { useContract } from '../context/ContractContext'

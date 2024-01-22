@@ -11,6 +11,7 @@ const Img = styled.div`
   background-image: url(${backgroundImage});
   min-height: 800px;
   height: 100vh;
+  background-size: cover;
 `;
 
 function App() {
