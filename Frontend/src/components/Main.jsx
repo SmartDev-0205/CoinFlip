@@ -81,7 +81,7 @@ export default function Main() {
         } else if (num === '0xfa2') {
             setNetwork('Fantom Testnet')
         } else {
-            setNetwork('N/A')
+            setNetwork('BSC')
         }
     }, [setNetwork])
 
